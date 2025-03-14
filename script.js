@@ -84,4 +84,117 @@ document.addEventListener('DOMContentLoaded', () => {
             }, 250);
         });
     }
+
+    // Grid effect
+    const hero = document.querySelector('.hero');
+    const grid = document.querySelector('.grid-background');
+    const GRID_SIZE = 30;
+    const cells = [];
+    const TRAIL_LENGTH = 5; // Number of cells in the trail
+    let lastCells = []; // Array to store recently activated cells
+    
+    // Create grid cells
+    function createGridCells() {
+        const width = hero.offsetWidth;
+        const height = hero.offsetHeight;
+        const cols = Math.ceil(width / GRID_SIZE);
+        const rows = Math.ceil(height / GRID_SIZE);
+        
+        // Clear existing cells
+        cells.forEach(cell => cell.remove());
+        cells.length = 0;
+        lastCells = [];
+        
+        // Create new cells
+        for (let i = 0; i < rows; i++) {
+            for (let j = 0; j < cols; j++) {
+                const cell = document.createElement('div');
+                cell.className = 'grid-cell';
+                cell.style.left = `${j * GRID_SIZE}px`;
+                cell.style.top = `${i * GRID_SIZE}px`;
+                grid.appendChild(cell);
+                cells.push(cell);
+            }
+        }
+    }
+    
+    // Handle mouse movement
+    function handleMouseMove(e) {
+        const rect = hero.getBoundingClientRect();
+        // 考虑页面滚动位置
+        const scrollX = window.pageXOffset || document.documentElement.scrollLeft;
+        const scrollY = window.pageYOffset || document.documentElement.scrollTop;
+        
+        const mouseX = e.pageX - (rect.left + scrollX);
+        const mouseY = e.pageY - (rect.top + scrollY);
+        
+        // Calculate current grid position
+        const gridX = Math.floor(mouseX / GRID_SIZE);
+        const gridY = Math.floor(mouseY / GRID_SIZE);
+        
+        // Find current cell
+        const currentCell = cells.find(cell => {
+            const cellX = parseInt(cell.style.left) / GRID_SIZE;
+            const cellY = parseInt(cell.style.top) / GRID_SIZE;
+            return cellX === gridX && cellY === gridY;
+        });
+
+        if (currentCell) {
+            // Add current cell to trail
+            lastCells.unshift({
+                cell: currentCell,
+                timestamp: Date.now()
+            });
+
+            // Limit trail length
+            if (lastCells.length > TRAIL_LENGTH) {
+                lastCells.pop();
+            }
+
+            // Update all cells
+            cells.forEach(cell => {
+                const trailIndex = lastCells.findIndex(item => item.cell === cell);
+                if (trailIndex >= 0) {
+                    const opacity = 1 - (trailIndex / TRAIL_LENGTH);
+                    cell.classList.add('active');
+                    cell.style.opacity = opacity;
+                    cell.style.transform = `scale(${1 + (0.1 * (1 - trailIndex / TRAIL_LENGTH))})`;
+                } else {
+                    cell.classList.remove('active');
+                    cell.style.opacity = '';
+                    cell.style.transform = '';
+                }
+            });
+        }
+        
+        // Parallax effect
+        const moveX = (mouseX / rect.width) * 20;
+        const moveY = (mouseY / rect.height) * 20;
+        grid.style.transform = `translate(${-moveX}px, ${-moveY}px)`;
+    }
+    
+    // Reset cells when mouse leaves
+    function handleMouseLeave() {
+        lastCells = [];
+        cells.forEach(cell => {
+            cell.classList.remove('active');
+            cell.style.opacity = '';
+            cell.style.transform = '';
+        });
+        grid.style.transform = 'translate(0, 0)';
+    }
+    
+    // Initialize grid
+    createGridCells();
+    
+    // Add event listeners
+    hero.addEventListener('mousemove', handleMouseMove);
+    hero.addEventListener('mouseleave', handleMouseLeave);
+    
+    // Update grid on resize
+    let resizeTimeout;
+    window.addEventListener('resize', () => {
+        clearTimeout(resizeTimeout);
+        resizeTimeout = setTimeout(createGridCells, 250);
+    });
 }); 
