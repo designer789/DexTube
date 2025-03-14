@@ -197,4 +197,26 @@ document.addEventListener('DOMContentLoaded', () => {
         clearTimeout(resizeTimeout);
         resizeTimeout = setTimeout(createGridCells, 250);
     });
+
+    // 汉堡菜单功能
+    const hamburger = document.querySelector('.hamburger-menu');
+    const navLinks = document.querySelector('.nav-links');
+    
+    if (hamburger && navLinks) {
+        hamburger.addEventListener('click', () => {
+            hamburger.classList.toggle('active');
+            navLinks.classList.toggle('active');
+            document.body.classList.toggle('menu-open');
+        });
+        
+        // 点击导航链接后关闭菜单
+        const navItems = document.querySelectorAll('.nav-links a');
+        navItems.forEach(item => {
+            item.addEventListener('click', () => {
+                hamburger.classList.remove('active');
+                navLinks.classList.remove('active');
+                document.body.classList.remove('menu-open');
+            });
+        });
+    }
 }); 

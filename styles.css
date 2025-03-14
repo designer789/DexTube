@@ -1567,4 +1567,171 @@ html {
 
 .grid-cell.active {
   background: linear-gradient(45deg, rgba(5, 119, 248, 0.15), rgba(20, 223, 241, 0.15));
+}
+
+/* 添加汉堡菜单样式 */
+.hamburger-menu {
+    display: none;
+    flex-direction: column;
+    justify-content: space-between;
+    width: 30px;
+    height: 21px;
+    cursor: pointer;
+    z-index: 1001;
+}
+
+.bar {
+    height: 3px;
+    width: 100%;
+    background: var(--text-primary);
+    border-radius: 3px;
+    transition: all 0.3s ease;
+}
+
+/* 移动端导航样式 */
+@media (max-width: 768px) {
+    .nav-links {
+        position: fixed;
+        top: 0;
+        right: -100%;
+        width: 70%;
+        height: 100vh;
+        background: rgba(10, 10, 10, 0.95);
+        backdrop-filter: blur(10px);
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        gap: 2.5rem;
+        transition: right 0.3s ease;
+        z-index: 1000;
+    }
+    
+    .nav-links.active {
+        right: 0;
+    }
+    
+    .nav-social {
+        display: none;
+    }
+    
+    .hamburger-menu {
+        display: flex;
+    }
+    
+    /* 汉堡菜单动画 */
+    .hamburger-menu.active .bar:nth-child(1) {
+        transform: translateY(9px) rotate(45deg);
+    }
+    
+    .hamburger-menu.active .bar:nth-child(2) {
+        opacity: 0;
+    }
+    
+    .hamburger-menu.active .bar:nth-child(3) {
+        transform: translateY(-9px) rotate(-45deg);
+    }
+    
+    /* 导航链接样式调整 */
+    .nav-links a {
+        font-size: 1.2rem;
+    }
+} 
+
+/* 添加防止滚动样式 */
+body.menu-open {
+    overflow: hidden;
+}
+
+/* 添加移动端社交图标样式 */
+@media (max-width: 768px) {
+    .nav-links.active {
+        padding: 2rem;
+    }
+    
+    .nav-links.active::after {
+        content: '';
+        position: absolute;
+        bottom: 20%;
+        left: 0;
+        width: 100%;
+        height: 1px;
+        background: rgba(255, 255, 255, 0.1);
+    }
+    
+    .nav-links.active::before {
+        content: '';
+        display: flex;
+        width: 100%;
+        justify-content: center;
+        gap: 1rem;
+        position: absolute;
+        bottom: 10%;
+        left: 0;
+        padding: 1rem 0;
+    }
+} 
+
+/* 完善 hero-stats 在移动设备上的响应式布局 */
+@media (max-width: 768px) {
+    .hero {
+        padding: 6rem 1rem 3rem;
+        min-height: auto;
+        justify-content: flex-start;
+    }
+    
+    .hero-content {
+        margin-top: 3rem;
+        margin-bottom: 2rem;
+        padding: 0 0.5rem;
+    }
+    
+    .hero h1 {
+        font-size: 3rem;
+        margin-bottom: 1.5rem;
+    }
+    
+    .hero p {
+        font-size: 1rem;
+        margin-bottom: 1.5rem;
+    }
+    
+    .hero-buttons {
+        flex-direction: column;
+        width: 100%;
+        gap: 1rem;
+    }
+    
+    .hero-buttons button {
+        width: 100%;
+    }
+    
+    .hero-stats {
+        flex-direction: column;
+        gap: 1rem;
+        margin-top: 2rem;
+        width: 100%;
+        padding: 0 0.5rem;
+    }
+    
+    .stat-item {
+        width: 100%;
+        padding: 1.25rem;
+        background: rgba(255, 255, 255, 0.03);
+        border-radius: 16px;
+        border: 1px solid rgba(255, 255, 255, 0.05);
+        transition: all 0.3s ease;
+    }
+    
+    .stat-item h3 {
+        font-size: 2rem;
+    }
+    
+    .stat-item p {
+        font-size: 0.9rem;
+    }
+    
+    .stat-item:hover {
+        background: rgba(255, 255, 255, 0.05);
+        transform: translateY(-2px);
+    }
 } 
